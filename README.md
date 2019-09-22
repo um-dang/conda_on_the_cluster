@@ -245,7 +245,9 @@ Second, for more complex reasons, we should also change how priority is set when
 conda config --set channel_priority strict
 ```
 
-**13.** Now, go back to the website, copy the installation code for `mothur`, paste it into your terminal, and run the installation. By specifying `-c` during the install, we can tell Conda which channel to use. This is particularly important when downloading packages that have multiple copies on multiple channels.
+<br />
+
+**13.** Now, go back to the website, copy the installation code for `mothur`, paste it into your terminal, and run the installation. By specifying `-c` during the install, we can tell Conda which channel to use. This is particularly important when downloading packages that have multiple copies on multiple channels. Also, notice that Conda automatically determines and installs the dependencies required for installing/running the program. This is one of the major advantages of using a package manager like Conda.
 
 ```
 conda install -c bioconda mothur
@@ -253,13 +255,53 @@ conda install -c bioconda mothur
 
 <br />
 
+**14.** When the installation finishes, see what other programs/dependencies were installed.
+
+```
+conda list
+```
+
+<br />
+
+**15.** Let's try running `mothur` to see if it worked.
+
+```
+which mothur
+mothur
+quit()
+```
+**Success!**
+
+<br />
+
+**16.** The last important function is the ability to export environments for sharing. To do so, we'll use `conda`'s export function while the desired environment is active.
+
+```
+conda env export > environment.yaml
+```
+
+<br />
+
+**17.** If you take a look at the new environment file, you can see that it lists all of the channels, packages, and package versions from the current environment. The `prefex` line also encodes the path of the environment. 
+
+```
+cat environment.yaml
+```
+
+<br />
+
+**18.** These types of `.yaml` files can be used to create new environments as part of workflows. While we programmatically generated a `.yaml` environment file, you can also generate them manually. I've included an example as part of this repo. We can create an environment from that file using the following.
+```
+conda env create -f example.yaml
+```
+
+## Conclusions
+
+Summary
+Tips
 
 
-
-
-
-
-## Additional Tips
+## Additional Resources
 
 
 
