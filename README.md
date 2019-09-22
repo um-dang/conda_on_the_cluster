@@ -133,14 +133,17 @@ Now that we've installed Conda, we're ready to start how to use it as an environ
 <br />
 
 **1.** To start with, let's see what environments we currently have set up. This will list all of the environments available for us to use along with their locations. 
+
 ```
 conda env list
 ```
+
 By default, an environment called `base` is created when installing and intializing Conda. `base` contains a number of standard Python packages that may or may not be useful.
 
 <br />
 
 **2.** Because we altered the code in our `~/.bashrc`, the `base` environment isn't loaded automatically when we log into the shell. This can help speed up tasks if you don't need to use anything in the environment but, if we do need to use something in the environment, we'll need to activate the environment first. We'll start with the `base` environment.
+
 ```
 conda activate base
 ```
@@ -148,6 +151,7 @@ conda activate base
 <br />
 
 **3.** You should now see that the word `base` is in your prompt showing that we've loaded the base environment. Another way to check which environment you have active is to look at the `$CONDA_PREFIX` variable. If you don't have any environment loaded, the output will be blank.
+
 ```
 echo $CONDA_PREFIX
 ```
@@ -155,6 +159,7 @@ echo $CONDA_PREFIX
 <br />
 
 **4.** Now that we have the `base` environment loaded, let's see what programs it contains for us to use.
+
 ```
 conda list
 ```
@@ -163,17 +168,17 @@ The output from this command lists all of the programs, their versions, the buil
 <br />
 
 **5.** We can check to make sure we are using the programs from our environment by using `which` to print the executable path or by checking our `$PATH` variable. The `$PATH` variable lists the order of folders from first to last that the shell will look through to find executables. The shell will execute the first binary it finds and ignore the rest so it's important our `$PATH` is in the correct order.
+
 ```
 which python
-```
-```
 echo $PATH
 ```
 
 <br />
 
-**6.** In a typical workflow, it's good practice to create environments for each task (script) being executed to both keep the environment running as fast as possible and reduce the likelihood of conflicting programs/versions. Let's create a new environment for analyzing 16S bacterial sequencing data with [**mothur**](https://mothur.org/wiki/Main_Page). First, let's deactivate the current environment.
+**6.** In a typical workflow, it's good practice to create environments for each task (script) being executed to keep the environment running as fast as possible, reduce the likelihood of conflicting programs/versions, and assist in debugging when things don't work out. Let's create a new environment for analyzing 16S bacterial sequencing data with [**mothur**](https://mothur.org/wiki/Main_Page). First, let's deactivate the current environment.
 > **NOTE:** Deactivating the current environment is being done here for the sake of clarity. The process of creating and managing a new environment are exactly the same whether another environment is active or not.
+
 ```
 conda deactivate
 ```
@@ -189,6 +194,7 @@ conda create -n mothur
 <br />
 
 **8.** We should see it in our list of available environments now. Also note that the new environment is created in a subdirectory of the `miniconda3` folder in our home directory. This is where binaries, etc. will be downloaded to if you ever need to find them.
+
 ```
 conda env list
 ```
@@ -196,6 +202,7 @@ conda env list
 <br />
 
 **9.** We can activate the new environment.
+
 ```
 conda activate mothur
 ```
@@ -203,17 +210,18 @@ conda activate mothur
 <br />
 
 **10.** If we look at which programs the environment contains, we'll see that it's empty.
+
 ```
 conda list
 ```
 
 <br />
 
-**11.** To add new programs (in this case `mothur`), we can download them from the [**Anaconda Cloud**](https://anaconda.org/). Anaconda Cloud is a series of repositories called **channels** that contain version controlled programs for use with Conda. Different channels will have different themes and users are also able to create their own private channels. For bioinformatics, the main channel is called [**Bioconda**](https://bioconda.github.io/index.html).
+**11.** To add new programs (in this case `mothur`), we can download them from the [**Anaconda Cloud**](https://anaconda.org/). Anaconda Cloud is a series of repositories called **channels** that contain version controlled programs for use with Conda. Different channels will have different themes and users are also able to create their own private channels. For example, the main bioinformatics channel is called [**Bioconda**](https://bioconda.github.io/index.html).
 
 <br />
 
-By searching on [**Anaconda Cloud**](https://anaconda.org/), we can find which versions of `mothur` are available and how to download it. We can see that `mothur` is available from multiple channels but we'll use Bioconda specifically.
+By searching on Anaconda Cloud, we can find which versions of `mothur` are available and how to download it. We can see that `mothur` is available from multiple channels but we'll use Bioconda specifically.
 
 ![Image showing mothur available from multiple channels](/images/anaconda_mothur_search_results.png)
 
@@ -225,15 +233,26 @@ If we click on the Bioconda version, we'll be taken to the information page for 
 
 <br />
 
-**12.** Copy the installation code from the webpage, paste it into your terminal, and run it. By specifying `-c` during the install, we can tell Conda which channel to use. This is particularly important when downloading packages that have multiple copies on multiple channels.
+**12.** Before we install mothur, we need to make two quick changes to our default channels. Similar to our `~/.bashrc`, we can also create a `~/.condarc` for [configuring Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html). First, when you install Conda, there are a few default channels but one that is also useful to add is [**Conda-Forge**](https://conda-forge.org/). Conda-Forge packages are typically more up-to-date than the default channels and, thus, it helps satisfy potential dependency issues. To create the `~/.condarc` if it doesn't already exist and add Conda-Forge to your channels, type the following.
+
+```
+conda config --add channels conda-forge
+```
+
+Second, for more complex reasons, we should also change how priority is set when searching for packages. You can read more about it [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html#strict-channel-priority).
+
+```
+conda config --set channel_priority strict
+```
+
+**13.** Now, go back to the website, copy the installation code for `mothur`, paste it into your terminal, and run the installation. By specifying `-c` during the install, we can tell Conda which channel to use. This is particularly important when downloading packages that have multiple copies on multiple channels.
+
 ```
 conda install -c bioconda mothur
 ```
 
 <br />
 
-When you install Conda, there are a few default channels but one that needs to be added to the defaults is [**Conda-Forge**](https://conda-forge.org/)
-conda config --add channels new_channel
 
 
 
