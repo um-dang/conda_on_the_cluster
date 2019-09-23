@@ -4,18 +4,43 @@
 **September 23, 2019**
 
 
-## Guiding Questions
+## Goals
 
-* What is Conda?
-* Why is Conda better than other
+* Understand what Conda is and how it can simplify analysis pipelines.
+* Learn how to install and configure Conda on any system.
+* Be able to create reproducible computing environments for (almost) any task.
+
+<br />
 
 ## Conda in Theory
 
 ### What is Conda?
 
+[**Conda**](https://docs.conda.io/projects/conda/en/latest/index.html) is a Python-based environment and package manager. It helps produce reproducible analysis pipelines using crowd-sourced and version-controlled packages.
+
+<br />
+
+If you are new to this type of approach, you may not know what that means. Here is some quick vocabulary so we're all on the same page:
+* **Environment**: A computing environment is the collection of programs, language libraries, etc. in which a computer operates. Environments can be defined at many different levels similar to the ecological sense where an environment may refer to a 1 cm x 1 cm square of grass or an entire continent.
+* **Package**: A package is a collection of software that may contain things such as programs (e.g. Python), programming libraries (e.g. Perl), or other useful tools. Conda combines packages to construct environments for doing complex tasks.
+
+<br />
+
+In short, what that means is Conda creates self-contained modules that contain all of the necessary programs, etc. for completing a particular computing task.
+
+<br />
+
 ### Why is Conda useful?
 
+Using Conda as part of analysis workflows has a lot of advantages:
+* It works on all major operating systems (Mac, Windows, and Linux).\*
+> **NOTE:** Not all packages are available for every operating system. Windows tends to be the most affected by this.
+* It helps keep your computing environment organized so you're less likely to end up in [**"dependency hell"**](https://en.wikipedia.org/wiki/Dependency_hell).
+* Packages are version-controlled so you can easily switch versions if one isn't working.
+* Environments can be reproducible and shareable leading to increased analytical veracity.
+* It works exceptionally well when combined the workflow managers. See the ["Additional Resources"](#additional-resources) section below for more information.
 
+<br />
 
 ## Conda in Practice
 
@@ -63,13 +88,15 @@ ls
 
 <br />
 
-**6.** It's good practice to make sure downloaded files weren't corrupted during the download process. One way to do that is using **hashes** which are unique signatures generated based on the file contents. Some (but not all) sites will make the hash available so you can verify the download was successful. Let's check ours now.
+**6.** It's good practice to make sure downloaded files weren't corrupted during the download process. One way to do that is using [**checksum hashes**](https://en.wikipedia.org/wiki/Checksum) which are unique signatures generated based on the file contents. Some (but not all) sites will make the hash available so you can verify the download was successful. If your hash doesn't match the host's hash, it means there was an error with your download and you should probably try it again. The larger the files (e.g. large DNA sequencing files), the more important it is to check. Let's check ours now.
 
 ```
 shasum -a 256 Miniconda3-latest-Linux-x86_64.sh
 # 8a324adcc9eaf1c09e22a992bb6234d91a94146840ee6b11c114ecadafc68121  Miniconda3-latest-Linux-x86_64.sh
 
 ```
+
+
 
 <br />
 
@@ -145,7 +172,7 @@ source ~/.bash_profile
 
 <br />
 
-**13.** Lastly, we'll check to make sure we can access the `conda` command.
+**13.** Lastly, we'll do a quick check to make sure we can now access the `conda` command.
 
 ```
 conda --help
@@ -157,7 +184,7 @@ conda --help
 
 ### Environments 101
 
-Now that we've installed Conda, we're ready to start learning how to use it as an environment-based package manager. Environments are an integral part of Conda-based workflows. They are customizable, reproducible, and shareable modules that contain the resources for a specific task or set of tasks. Environments also help avoid [**"dependency hell"**](https://en.wikipedia.org/wiki/Dependency_hell) where required programs are incompatible with previously installed programs or program versions.
+Now that we've installed Conda, we're ready to start learning how to use it as an environment-based package manager. Environments are an integral part of Conda-based workflows. They are customizable, reproducible, and shareable modules that contain the resources for a specific task or set of tasks. Environments also help avoid "dependency hell" where required programs are incompatible with previously installed programs or program versions.
 
 <br />
 
@@ -304,12 +331,11 @@ quit()
 
 ### Using `.yaml` Files to Create and Share Reproducible Environments
 
-
-The last important function we'll go over is the ability to [**create environments from a `.yaml` file**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file). These files can also be shared with others so they can create similar environments. While there are ways to export your current environment (ex: create a file that lists all the packages, versions, etc. in `base` or `mothur`), **it's generally a bad idea** for a number of reasons, the main one being that they aren't typically cross-platform compatible (more information [**here**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment#building-identical-conda-environments). We'll create one manually and then show how we use it to create a new environment.
+The last important function we'll go over is the ability to [**create environments from a `.yaml` file**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file). These files can also be shared with others so they can create similar environments. While you can programmatically export your entire environment (channels, packages, versions, etc.) to a `.yaml` file, **it's generally a bad idea** for a number of reasons, the main one being that they aren't typically cross-platform compatible (more information [**here**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment#building-identical-conda-environments). We'll create one manually and then show how we use it to create a new environment.
 
 <br />
 
-**1.** To start, create a new `.yaml` file. For the majority of environments, you'll only need to include the three essentials: **i) name**,  **ii) channels**, and **iii) dependencies**. [Setting specific versions](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/pkg-specs.html#package-match-specifications) to use is optional but highly recommended for reproducibility.
+**1.** To start, we'll create a `.yaml` file for our new environment. For the majority of environments, you only need to include the three essentials: **i) name**,  **ii) channels**, and **iii) dependencies**. Setting specific [versions](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/pkg-specs.html#package-match-specifications) is optional but highly recommended for reproducibility. In this case, we'll be creating an environment for using [**SAMtools**](http://samtools.sourceforge.net/) to manipulate sequencing alignment files.
 
 ```
 nano testEnv.yaml
@@ -334,21 +360,41 @@ conda env create -f testEnv.yaml
 
 <br />
 
-**3.** ...which we can now use whenever we want!
+**3.** ...Which we can now use whenever we want! 
 
 ```
 conda env list
 ```
 
+**4.** When looking at our updated environment list, notice that the name of the new environment is set based on the `name` attribute in the `.yaml` file and not the name of the `.yaml` file itself. It's generally good practice to name your `.yaml` file based on the `name` attribute within the file so it's easier to keep track of things. Let's finish strong and fix that.
+
+```
+mv testEnv.yaml samtools.yaml
+```
+
+<br />
+
 ## Conclusions
 
-Summary
-Tips
+Congratulations on finishing the tutorial! Now that you know the fundamentals of how to set up Conda and use it to manage environments and packages, you should be able to reliably use it as part of your analysis workflows. That being said, it's important to note the material covered as part of this tutorial only scratches the surface of what can be done with Conda and there may be occasions when you want a little more control. In those situations, I highly recommend checking out the [**Conda documentation**](https://docs.conda.io/en/latest/) and checking out the various user communities. They're great resources for finding new tips, debugging errors, and getting general guidance. I've also included some additional items below that might help you get to where you want to be. Good luck!
 
+<br />
 
-## Additional Resources
+### Best Practice DOs and DON'Ts of Conda
 
+* DO verify the checksum hashes of downloaded files to make sure they downloaded properly.
+* DO create separate environments for each task or script being ran.
+* DON'T create Conda environments without using `.yaml` files (unless you're just testing something).
+* DON'T export your entire environment as a `.yaml`.
+* DO manually create `.yaml` files for each environment you plan on using.
+* DO name your environment `.yaml` file using the same label as the `name` attribute within the file.
 
+<br />
+
+### Additional Resources
+
+* There wasn't time to cover it as part of this tutorial but one of the most useful implementations of Conda is as part of a [**Snakemake**](https://snakemake.readthedocs.io/en/stable/) workflow. Where Conda is a package and environment manager, Snakemake is a workflow manager. By combining the two programs, you can create entirely reproducible analysis pipelines. As point of note, the [**Snakemake tutorial**](https://snakemake.readthedocs.io/en/stable/tutorial/tutorial.html) is also one of the best programming tutorials I've gone through.
+* The majority of packages on Conda are maintained by users so if you think there's a package you would like to see or maybe one that needs to be fixed, it's a great opportunity to get involved with a great group of people. I personally help maintain Bioconda and have found it really rewarding. If you're interested in contributing, you can find more information on channel specific pages (e.g. [**Bioconda**](https://bioconda.github.io/contributor/index.html) or [**Conda-Forge**](https://conda-forge.org/#contribute)) and in the [**Conda documentation**](https://docs.conda.io/projects/conda-build/en/latest/).
 
 
 
