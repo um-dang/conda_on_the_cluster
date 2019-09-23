@@ -4,11 +4,12 @@
 **September 23, 2019**
 
 
-## Summary
+## Guiding Questions
 
-* 
+* What is Conda?
+* Why is Conda better than other
 
-## Introduction to Conda
+## Conda in Theory
 
 ### What is Conda?
 
@@ -16,7 +17,9 @@
 
 
 
-## Installing Conda
+## Conda in Practice
+
+### Installing Conda
 
 The process for installing Conda is the same across most operating systems but we will use the University of Michigan Great Lakes HPC cluster as a uniform Linux environment for the purposes of this tutorial.
 > **NOTE:** If you don't have access to the cluster, skip to Step 3. Then, make sure to choose the correct installer and adjust accordingly going forward.
@@ -110,7 +113,31 @@ nano ~/.bashrc
 
 <br />
 
-**11.** Now that we've finished setting everything up, we need to reload the shell session for our changes to take place. When we source `~/.bash_profile`, it should also source `~/.bashrc`.
+**11.** Similar to how we use our `~/.bashrc` to configure our shell, we can also create a `~/.condarc` file for [configuring Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html). We can use this to tell Conda where and how to search for packages that we want to download. With Conda, packages are retreived from version-controlled repositories called **channels** and different channels will have different themes. For example, the main bioinformatics channel is called [**Bioconda**](https://bioconda.github.io/index.html).
+
+<br />
+
+Conda comes with a few default channels included but they aren't always that useful. To fix this, we can add new channels to our `~/.condarc` file. Today, we'll be adding the [**Conda-Forge**](https://conda-forge.org/) channel. Packages on Conda-Forge are typically more up-to-date than the default channels and adding it will help satisfy a lot of potential dependency issues.
+
+<br />
+
+To add Conda-Forge to your channels, type the following. If your `~/.condarc` doesn't already exist, this will also create it. 
+
+```
+conda config --add channels conda-forge
+```
+
+<br />
+
+For the last configuration (and for more complex reasons) we should also change how priority is set when searching for packages. You can read more about it [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html#strict-channel-priority).
+
+```
+conda config --set channel_priority strict
+```
+
+<br />
+
+**12.** Now that we've finished setting everything up, we need to reload the shell session for our changes to take place. When we source `~/.bash_profile`, it should also source `~/.bashrc`. Alternatively, you can restart your terminal or terminal session.
 
 ```
 source ~/.bash_profile
@@ -118,7 +145,7 @@ source ~/.bash_profile
 
 <br />
 
-**12.** Lastly, we'll check to make sure we can access the `conda` command.
+**13.** Lastly, we'll check to make sure we can access the `conda` command.
 
 ```
 conda --help
@@ -128,7 +155,9 @@ conda --help
 
 ## Creating and Managing Environments
 
-Now that we've installed Conda, we're ready to start how to use it as an environment-based package manager. Environments are an integral part of Conda-based workflows. They are customizable, reproducible, and shareable modules that contain the resources for a specific task or set of tasks. Environments also help avoid [**"dependency hell"**](https://en.wikipedia.org/wiki/Dependency_hell) where required programs are incompatible with previously installed programs or program versions.
+### Environments 101
+
+Now that we've installed Conda, we're ready to start learning how to use it as an environment-based package manager. Environments are an integral part of Conda-based workflows. They are customizable, reproducible, and shareable modules that contain the resources for a specific task or set of tasks. Environments also help avoid [**"dependency hell"**](https://en.wikipedia.org/wiki/Dependency_hell) where required programs are incompatible with previously installed programs or program versions.
 
 <br />
 
@@ -150,7 +179,7 @@ conda activate base
 
 <br />
 
-**3.** You should now see that the word `base` is in your prompt showing that we've loaded the base environment. Another way to check which environment you have active is to look at the `$CONDA_PREFIX` variable. If you don't have any environment loaded, the output will be blank.
+**3.** You should now see that the word `base` is in your prompt showing that we've loaded the base environment. Another way to check which environment you have active is to look at the `$CONDA_PREFIX` shell variable. If you don't have any environment loaded, the output will be blank.
 
 ```
 echo $CONDA_PREFIX
@@ -158,16 +187,16 @@ echo $CONDA_PREFIX
 
 <br />
 
-**4.** Now that we have the `base` environment loaded, let's see what programs it contains for us to use.
+**4.** Now that we have the `base` environment loaded, let's see which programs it contains for us to use.
 
 ```
 conda list
 ```
-The output from this command lists all of the programs, their versions, the build number, and the channel they came from (if outside of the default channels, more on that later).
+The output from this command lists all of the programs, their versions, the build number, and the channel they came from if outside of the default channels.
 
 <br />
 
-**5.** We can check to make sure we are using the programs from our environment by using `which` to print the executable path or by checking our `$PATH` variable. The `$PATH` variable lists the order of folders from first to last that the shell will look through to find executables. The shell will execute the first binary it finds and ignore the rest so it's important our `$PATH` is in the correct order.
+**5.** We can check to make sure we are using the programs from our environment by using `which` to print the executable path or by checking our shell `$PATH` variable. The `$PATH` variable lists the order of folders from first to last that the shell will look through to find executables. The shell will execute the first binary it finds and ignore the rest so it's important our `$PATH` is in the correct order.
 
 ```
 which python
@@ -176,7 +205,11 @@ echo $PATH
 
 <br />
 
-**6.** In a typical workflow, it's good practice to create environments for each task (script) being executed to keep the environment running as fast as possible, reduce the likelihood of conflicting programs/versions, and assist in debugging when things don't work out. Let's create a new environment for analyzing 16S bacterial sequencing data with [**mothur**](https://mothur.org/wiki/Main_Page). First, let's deactivate the current environment.
+### Creating Task-Specific Environments
+
+In a typical workflow, it's good practice to create environments for each task (script) being executed to keep the environment running as fast as possible, reduce the likelihood of conflicting programs/versions, and assist in debugging when things don't work out. Let's create a new environment for analyzing 16S bacterial sequencing data with [**mothur**](https://mothur.org/wiki/Main_Page). 
+
+**1.** First, let's deactivate the current environment.
 > **NOTE:** Deactivating the current environment is being done here for the sake of clarity. The process of creating and managing a new environment are exactly the same whether another environment is active or not.
 
 ```
@@ -185,7 +218,7 @@ conda deactivate
 
 <br />
 
-**7.** Next, let's create an empty environment for our `mothur` analysis.
+**2.** Next, let's create an empty environment for our `mothur` analysis.
 
 ```
 conda create -n mothur
@@ -193,7 +226,7 @@ conda create -n mothur
 
 <br />
 
-**8.** We should see it in our list of available environments now. Also note that the new environment is created in a subdirectory of the `miniconda3` folder in our home directory. This is where binaries, etc. will be downloaded to if you ever need to find them.
+**3.** We should see it in our list of available environments now. Also note that the new environment is created in the `miniconda3/envs/` subdirectory in our home folder. This is where binaries, etc. will be downloaded to if you ever need to find them.
 
 ```
 conda env list
@@ -201,7 +234,7 @@ conda env list
 
 <br />
 
-**9.** We can activate the new environment.
+**4.** Let's activate the new environment.
 
 ```
 conda activate mothur
@@ -209,7 +242,7 @@ conda activate mothur
 
 <br />
 
-**10.** If we look at which programs the environment contains, we'll see that it's empty.
+**5.** If we look at which programs the environment contains, we'll see that it's empty.
 
 ```
 conda list
@@ -217,11 +250,11 @@ conda list
 
 <br />
 
-**11.** To add new programs (in this case `mothur`), we can download them from the [**Anaconda Cloud**](https://anaconda.org/). Anaconda Cloud is a series of repositories called **channels** that contain version controlled programs for use with Conda. Different channels will have different themes and users are also able to create their own private channels. For example, the main bioinformatics channel is called [**Bioconda**](https://bioconda.github.io/index.html).
+**6.** To add new packages (in this case `mothur`), we can search for them on [**Anaconda Cloud**](https://anaconda.org/). Using Anaconda Cloud, we can find which channels we can retrieve `mothur` from, which versions are available, and a lot of other useful information. 
 
 <br />
 
-By searching on Anaconda Cloud, we can find which versions of `mothur` are available and how to download it. We can see that `mothur` is available from multiple channels but we'll use Bioconda specifically.
+When we search for `mothur`, we can see that it's available from multiple channels but we'll use Bioconda specifically.
 
 ![Image showing mothur available from multiple channels](/images/anaconda_mothur_search_results.png)
 
@@ -233,29 +266,17 @@ If we click on the Bioconda version, we'll be taken to the information page for 
 
 <br />
 
-**12.** Before we install mothur, we need to make two quick changes to our default channels. Similar to our `~/.bashrc`, we can also create a `~/.condarc` for [configuring Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html). First, when you install Conda, there are a few default channels but one that is also useful to add is [**Conda-Forge**](https://conda-forge.org/). Conda-Forge packages are typically more up-to-date than the default channels and, thus, it helps satisfy potential dependency issues. To create the `~/.condarc` if it doesn't already exist and add Conda-Forge to your channels, type the following.
-
-```
-conda config --add channels conda-forge
-```
-
-Second, for more complex reasons, we should also change how priority is set when searching for packages. You can read more about it [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html#strict-channel-priority).
-
-```
-conda config --set channel_priority strict
-```
-
-<br />
-
-**13.** Now, go back to the website, copy the installation code for `mothur`, paste it into your terminal, and run the installation. By specifying `-c` during the install, we can tell Conda which channel to use. This is particularly important when downloading packages that have multiple copies on multiple channels. Also, notice that Conda automatically determines and installs the dependencies required for installing/running the program. This is one of the major advantages of using a package manager like Conda.
+**7.** Copy the installation code for `mothur`, paste it into your terminal, and run the installation. By specifying `-c` during the install, we can tell Conda which channel to use. This is particularly important when downloading packages that have multiple copies on multiple channels.
 
 ```
 conda install -c bioconda mothur
 ```
 
+Even though we only told it to install `mothur`, notice that Conda automatically determines and installs the dependencies required for installing and running it. This is one of the major advantages of using a package manager like Conda as opposed to doing this manually.
+
 <br />
 
-**14.** When the installation finishes, see what other programs/dependencies were installed.
+**8.** When the installation finishes, see what other programs/dependencies were installed.
 
 ```
 conda list
@@ -263,36 +284,60 @@ conda list
 
 <br />
 
-**15.** Let's try running `mothur` to see if it worked.
+**9.** Next, let's try running `mothur` to see if it worked.
 
 ```
 which mothur
 mothur
+```
+**Success!** We have now created a new, self-contained environment that contains everything we need to run `mothur` as part of our analysis.
+
+<br />
+
+To exit, type:
+
+```
 quit()
 ```
-**Success!**
 
 <br />
 
-**16.** The last important function is the ability to export environments for sharing. To do so, we'll use `conda`'s export function while the desired environment is active.
+### Using `.yaml` Files to Create and Share Reproducible Environments
+
+
+The last important function we'll go over is the ability to [**create environments from a `.yaml` file**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file). These files can also be shared with others so they can create similar environments. While there are ways to export your current environment (ex: create a file that lists all the packages, versions, etc. in `base` or `mothur`), **it's generally a bad idea** for a number of reasons, the main one being that they aren't typically cross-platform compatible (more information [**here**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment#building-identical-conda-environments). We'll create one manually and then show how we use it to create a new environment.
+
+<br />
+
+**1.** To start, create a new `.yaml` file. For the majority of environments, you'll only need to include the three essentials: **i) name**,  **ii) channels**, and **iii) dependencies**. [Setting specific versions](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/pkg-specs.html#package-match-specifications) to use is optional but highly recommended for reproducibility.
 
 ```
-conda env export > environment.yaml
+nano testEnv.yaml
+```
+```
+name: samtools
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.7.3
+  - samtools=1.9
 ```
 
 <br />
 
-**17.** If you take a look at the new environment file, you can see that it lists all of the channels, packages, and package versions from the current environment. The `prefex` line also encodes the path of the environment. 
+**2.** Then, we use that file to create a new environment...
 
 ```
-cat environment.yaml
+conda env create -f testEnv.yaml
 ```
 
 <br />
 
-**18.** These types of `.yaml` files can be used to create new environments as part of workflows. While we programmatically generated a `.yaml` environment file, you can also generate them manually. I've included an example as part of this repo. We can create an environment from that file using the following.
+**3.** ...which we can now use whenever we want!
+
 ```
-conda env create -f example.yaml
+conda env list
 ```
 
 ## Conclusions
