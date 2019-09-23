@@ -33,8 +33,8 @@ In short, what that means is Conda creates self-contained modules that contain a
 ### Why is Conda useful?
 
 Using Conda as part of analysis workflows has a lot of advantages:
-* It works on all major operating systems (Mac, Windows, and Linux).\*
-    > **NOTE:** Not all packages are available for every operating system. Windows tends to be the most affected by this.
+* It works on all major operating systems (Mac, Windows, and Linux).
+    > **NOTE:** While Conda works on all operating systems, not all packages are available for every operating system. Windows tends to be the most affected by this.
 * It helps keep your computing environment organized so you're less likely to end up in [**"dependency hell"**](https://en.wikipedia.org/wiki/Dependency_hell).
 * Packages are version-controlled so you can easily switch versions if one isn't working.
 * Environments can be reproducible and shareable leading to increased analytical veracity.
@@ -92,15 +92,15 @@ ls
 
 ```
 shasum -a 256 Miniconda3-latest-Linux-x86_64.sh
-# 8a324adcc9eaf1c09e22a992bb6234d91a94146840ee6b11c114ecadafc68121  Miniconda3-latest-Linux-x86_64.sh
-
 ```
-
-
 
 <br />
 
 **7.** Compare the hash to the hash listed next to the installer. If it doesn't match (ours does so no problems), try downloading again or check your internet settings.
+
+```
+8a324adcc9eaf1c09e22a992bb6234d91a94146840ee6b11c114ecadafc68121  Miniconda3-latest-Linux-x86_64.sh
+```
 
 <br />
 
@@ -219,7 +219,7 @@ echo $CONDA_PREFIX
 ```
 conda list
 ```
-The output from this command lists all of the programs, their versions, the build number, and the channel they came from if outside of the default channels.
+The output from this command lists all of the programs, their versions, the build number, and the channel they came from if outside of the `defaults` channels.
 
 <br />
 
@@ -234,7 +234,7 @@ echo $PATH
 
 ### Creating Task-Specific Environments
 
-In a typical workflow, it's good practice to create environments for each task (script) being executed to keep the environment running as fast as possible, reduce the likelihood of conflicting programs/versions, and assist in debugging when things don't work out. Let's create a new environment for analyzing 16S bacterial sequencing data with [**mothur**](https://mothur.org/wiki/Main_Page). 
+In a typical workflow, it's good practice to create environments for each task or script being executed to keep the environment running as fast as possible, reduce the likelihood of conflicting programs/versions, and assist in debugging when things don't work out. Let's create a new environment for analyzing 16S bacterial sequencing data with [**mothur**](https://mothur.org/wiki/Main_Page). 
 
 **1.** First, let's deactivate the current environment.
 > **NOTE:** Deactivating the current environment is being done here for the sake of clarity. The process of creating and managing a new environment are exactly the same whether another environment is active or not.
@@ -287,13 +287,13 @@ When we search for `mothur`, we can see that it's available from multiple channe
 
 <br />
 
-If we click on the Bioconda version, we'll be taken to the information page for `mothur` where we can see details about versions, metadata, and most importantly for us, installation instructions.
+**7.** If we click on the Bioconda version, we'll be taken to the information page for `mothur` where we can see details about versions, metadata, and most importantly for us, installation instructions.
 
 ![Image of bioconda/mothur package page](/images/anaconda_mothur_package_page.png)
 
 <br />
 
-**7.** Copy the installation code for `mothur`, paste it into your terminal, and run the installation. By specifying `-c` during the install, we can tell Conda which channel to use. This is particularly important when downloading packages that have multiple copies on multiple channels.
+**8.** Copy the installation code for `mothur`, paste it into your terminal, and run the installation. By specifying `-c` during the install, we can tell Conda which channel to use. This is particularly important when downloading packages that have multiple copies on multiple channels.
 
 ```
 conda install -c bioconda mothur
@@ -303,7 +303,7 @@ Even though we only told it to install `mothur`, notice that Conda automatically
 
 <br />
 
-**8.** When the installation finishes, see what other programs/dependencies were installed.
+**9.** When the installation finishes, see what other programs/dependencies were installed.
 
 ```
 conda list
@@ -311,7 +311,7 @@ conda list
 
 <br />
 
-**9.** Next, let's try running `mothur` to see if it worked.
+**10.** Next, let's try running `mothur` to see if it worked.
 
 ```
 which mothur
@@ -321,7 +321,7 @@ mothur
 
 <br />
 
-To exit, type:
+To exit `mothur`, type:
 
 ```
 quit()
@@ -331,11 +331,11 @@ quit()
 
 ### Using `.yaml` Files to Create and Share Reproducible Environments
 
-The last important function we'll go over is the ability to [**create environments from a `.yaml` file**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file). These files can also be shared with others so they can create similar environments. While you can programmatically export your entire environment (channels, packages, versions, etc.) to a `.yaml` file, **it's generally a bad idea** for a number of reasons, the main one being that they aren't typically cross-platform compatible (more information [**here**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment#building-identical-conda-environments). We'll create one manually and then show how we use it to create a new environment.
+The last important function we'll go over is the ability to [**create environments from a `.yaml` file**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file). These files can also be shared with others so they can create similar environments. While you can programmatically export your entire environment (channels, packages, versions, etc.) to a `.yaml` file, **it's generally a bad idea** for a number of reasons, the main one being that they aren't typically cross-platform compatible (more information [**here**](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment#building-identical-conda-environments)). We'll create one manually and then show how we use it to create a new environment.
 
 <br />
 
-**1.** To start, we'll create a `.yaml` file for our new environment. For the majority of environments, you only need to include the three essentials: **i) name**,  **ii) channels**, and **iii) dependencies**. Setting specific [versions](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/pkg-specs.html#package-match-specifications) is optional but highly recommended for reproducibility. In this case, we'll be creating an environment for using [**SAMtools**](http://samtools.sourceforge.net/) to manipulate sequencing alignment files.
+**1.** To start, we'll create a `.yaml` file for our new environment. For the majority of environments, you only need to include the three essentials: **i) name**,  **ii) channels**, and **iii) dependencies**. Setting specific [versions](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/pkg-specs.html#package-match-specifications) is optional but recommended in instances where reproducibility matters. In this case, we'll be creating an environment for using [**SAMtools**](http://samtools.sourceforge.net/) to manipulate sequencing alignment files.
 
 ```
 nano testEnv.yaml
@@ -365,6 +365,8 @@ conda env create -f testEnv.yaml
 ```
 conda env list
 ```
+
+<br />
 
 **4.** When looking at our updated environment list, notice that the name of the new environment is set based on the `name` attribute in the `.yaml` file and not the name of the `.yaml` file itself. It's generally good practice to name your `.yaml` file based on the `name` attribute within the file so it's easier to keep track of things. Let's finish strong and fix that.
 
