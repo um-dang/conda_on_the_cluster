@@ -34,7 +34,7 @@ In short, what that means is Conda creates self-contained modules that contain a
 
 Using Conda as part of analysis workflows has a lot of advantages:
 * It works on all major operating systems (Mac, Windows, and Linux).\*
->> **NOTE:** Not all packages are available for every operating system. Windows tends to be the most affected by this.
+    > **NOTE:** Not all packages are available for every operating system. Windows tends to be the most affected by this.
 * It helps keep your computing environment organized so you're less likely to end up in [**"dependency hell"**](https://en.wikipedia.org/wiki/Dependency_hell).
 * Packages are version-controlled so you can easily switch versions if one isn't working.
 * Environments can be reproducible and shareable leading to increased analytical veracity.
