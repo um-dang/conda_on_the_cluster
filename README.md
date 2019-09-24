@@ -140,7 +140,25 @@ nano ~/.bashrc
 
 <br />
 
-**11.** Similar to how we use our `~/.bashrc` to configure our shell, we can also create a `~/.condarc` file for [configuring Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html). We can use this to tell Conda where and how to search for packages that we want to download. With Conda, packages are retreived from version-controlled repositories called **channels** and different channels will have different themes. For example, the main bioinformatics channel is called [**Bioconda**](https://bioconda.github.io/index.html).
+**11.** Now that we've installed Conda and tweaked our `~/.bashrc`, we need to reload the shell session for our changes to take place. When we source `~/.bash_profile`, it should also source `~/.bashrc`. Alternatively, you can restart your terminal or terminal session.
+
+```
+source ~/.bash_profile
+```
+
+<br />
+
+**12.** Let's do a quick check to make sure we can now access the `conda` command.
+
+```
+conda --help
+```
+
+Looks great!
+
+<br />
+
+**13.** For our last step, we can also create a `~/.condarc` file for [configuring Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html) similar to how we use our `~/.bashrc` to configure our shell, . We can use this to tell Conda where and how to search for packages that we want to download. With Conda, packages are retreived from version-controlled repositories called **channels** and different channels will have different themes. For example, the main bioinformatics channel is called [**Bioconda**](https://bioconda.github.io/index.html).
 
 <br />
 
@@ -164,19 +182,7 @@ conda config --set channel_priority strict
 
 <br />
 
-**12.** Now that we've finished setting everything up, we need to reload the shell session for our changes to take place. When we source `~/.bash_profile`, it should also source `~/.bashrc`. Alternatively, you can restart your terminal or terminal session.
-
-```
-source ~/.bash_profile
-```
-
-<br />
-
-**13.** Lastly, we'll do a quick check to make sure we can now access the `conda` command.
-
-```
-conda --help
-```
+With all that out of the way, Conda is now ready to use!
 
 <br />
 
@@ -397,15 +403,3 @@ Congratulations on finishing the tutorial! Now that you know the fundamentals of
 
 * There wasn't time to cover it as part of this tutorial but one of the most useful implementations of Conda is as part of a [**Snakemake**](https://snakemake.readthedocs.io/en/stable/) workflow. Where Conda is a package and environment manager, Snakemake is a workflow manager. By combining the two programs, you can create entirely reproducible analysis pipelines. As point of note, the [**Snakemake tutorial**](https://snakemake.readthedocs.io/en/stable/tutorial/tutorial.html) is also one of the best programming tutorials I've gone through.
 * The majority of packages on Conda are maintained by users so if you think there's a package you would like to see or maybe one that needs to be fixed, it's a great opportunity to get involved with a great group of people. I personally help maintain Bioconda and have found it really rewarding. If you're interested in contributing, you can find more information on channel specific pages (e.g. [**Bioconda**](https://bioconda.github.io/contributor/index.html) or [**Conda-Forge**](https://conda-forge.org/#contribute)) and in the [**Conda documentation**](https://docs.conda.io/projects/conda-build/en/latest/).
-
-
-
-
-
-
-
-
-
-
-
-
