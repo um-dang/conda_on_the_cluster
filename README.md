@@ -1,4 +1,4 @@
-# Conda on the Cloud
+# Conda on the Cluster
 
 **William Close**<br />
 **September 23, 2019**
